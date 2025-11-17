@@ -2,23 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
-class DatabaseSeeder extends Seeder
+class AdminUserSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Usuario administrador
         User::updateOrCreate(
-            ['email' => 'admin@example.com'], // para evitar duplicados si ya existe
+            ['email' => 'admin@example.com'], // para evitar duplicados
             [
                 'name' => 'Administrador',
                 'password' => Hash::make('123456789'),
