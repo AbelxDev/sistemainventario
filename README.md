@@ -13,12 +13,12 @@
 
 2.- Ejecutar comando dentro de la carpeta para instalar dependencias del back-end
 ```
-componser install
+composer install
 ```
 
 2.1.- Ejecutar comando dentro de la carpeta para instalar dependencias del front-end
 ```
-npm run dev
+npm install
 ```
 
 3.- Clonar el archivo```.env.example``` a ```.env```, puedes hacerlo con el siguiente codigo:
