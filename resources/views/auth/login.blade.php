@@ -65,7 +65,7 @@
         <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
     </p>
 @endif
-<p class="my-0">
+{{-- <p class="my-0">
     <a href="{{ route('register') }}" class="text-center">Registrar un nuevo usuario</a>
-</p>
+</p> --}}
 @endsection

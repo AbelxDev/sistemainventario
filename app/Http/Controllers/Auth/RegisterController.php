@@ -24,13 +24,25 @@ class RegisterController extends Controller
             'password' => [
                 'required',
                 'string',
-                'confirmed', // Verifica que coincida con password_confirmation
-                Password::min(8) // mínimo 8 caracteres
-                    ->mixedCase() // al menos una mayúscula y una minúscula
-                    ->numbers()   // al menos un número
-                    ->symbols()   // al menos un símbolo
+                'confirmed',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
             ],
+        ], [
+            // MENSAJES PERSONALIZADOS
+
+            'name.required' => 'El nombre es obligatorio.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'Debe ingresar un correo válido.',
+            'email.unique' => 'Este correo ya está registrado.',
+
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
         ]);
+
 
         // Crear el usuario
         $user = User::create([
