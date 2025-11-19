@@ -47,3 +47,7 @@ Route::middleware(['auth'])->group(function () {
         return view('ambientes.index');
     })->name('ambientes.index');
 });
+
+Route::middleware(['auth', 'role:Administrador'])->get('/admin/users', function () {
+    return view('admin.users');
+})->name('admin.users');
