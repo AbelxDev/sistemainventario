@@ -21,7 +21,6 @@
                         <th>Acciones</th>
                     </tr>
                     </thead>
-
                     <tbody>
                     @foreach($proveedores as $index => $item)
                         <tr>
@@ -31,17 +30,17 @@
                             <td>{{ $item->telefono }}</td>
                             <td>{{ $item->direccion }}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm"
-                                        wire:click="editar({{ $item->id }})">
-                                    <i class="fa fa-edit me-1"></i>
-                                    Editar
-                                </button>
-
-                                <button class="btn btn-danger btn-sm"
-                                        wire:click="confirmarEliminacion({{ $item->id }})">
-                                    <i class="fa fa-trash me-1"></i>
-                                    Eliminar
-                                </button>
+                                <div class="d-flex align-items-center" style= "gap: 12px">
+                                    <button class="btn btn-warning btn-sm"
+                                            wire:click="editar({{ $item->id }})">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+    
+                                    <button class="btn btn-danger btn-sm"
+                                            wire:click="confirmarEliminacion({{ $item->id }})">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -55,4 +54,5 @@
     </div>
 
     @include('livewire.proveedores.modal')
+    @include('livewire.proveedores.modal-eliminar')
 </div>

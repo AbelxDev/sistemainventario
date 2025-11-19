@@ -11,6 +11,9 @@ class Index extends Component
     use WithPagination;
 
     public $modalVisible = false;
+    public $modalEliminarVisible = false; // <--- NUEVO MODAL ELIMINAR
+    public $nombreAEliminar; // para enviar en el modal de eliminación
+
     public $modo = 'crear';
 
     public $proveedor_id;
@@ -19,11 +22,21 @@ class Index extends Component
     public $telefono;
     public $direccion;
 
+    public $idAEliminar; // <--- ID para eliminar
+
     protected $rules = [
         'razon_social' => 'required|string|max:255',
-        'ruc' => 'required|string|max:11',
-        'telefono' => 'nullable|string|max:20',
+        'ruc' => 'required|string|max:20',
+        'telefono' => 'nullable|numeric',
         'direccion' => 'nullable|string|max:255',
+    ];
+
+    protected $messages = [
+        'razon_social.required' => 'La razón social es obligatoria.',
+        'razon_social.max' => 'La razón social no puede exceder los :max caracteres.',
+        
+        'ruc.required' => 'El RUC es obligatorio.',
+        'ruc.max' => 'El RUC no puede tener más de :max caracteres.',
     ];
 
     public function render()
@@ -38,7 +51,7 @@ class Index extends Component
     {
         $this->resetForForm();
         $this->modo = 'crear';
-        $this->modalVisible = true;
+        $this->dispatch('open-modal');
     }
 
     // Abrir modal para editar
@@ -55,7 +68,7 @@ class Index extends Component
         $this->direccion = $proveedor->direccion;
 
         $this->modo = 'editar';
-        $this->modalVisible = true;
+        $this->dispatch('open-modal');
     }
 
     public function guardar()
@@ -69,7 +82,7 @@ class Index extends Component
             'direccion' => $this->direccion,
         ]);
 
-        $this->cerrarModal();
+        $this->dispatch('close-modal');
     }
 
     public function actualizar()
@@ -83,17 +96,40 @@ class Index extends Component
             'direccion' => $this->direccion,
         ]);
 
-        $this->cerrarModal();
+        $this->dispatch('close-modal');
     }
 
     public function confirmarEliminacion($id)
     {
-        Proveedor::destroy($id);
+        $proveedor = Proveedor::findOrFail($id);
+
+        $this->idAEliminar = $id;
+        $this->nombreAEliminar = $proveedor->razon_social;
+
+        $this->modalEliminarVisible = true;
+
+        $this->dispatch('open-delete-modal');
     }
+
+    public function eliminar()
+    {
+        Proveedor::destroy($this->idAEliminar);
+        $this->idAEliminar = null;
+        $this->nombreAEliminar = null; // limpiamos
+        $this->modalEliminarVisible = false;
+        $this->dispatch('close-delete-modal');
+    }
+
+    public function cerrarModalEliminar()
+    {
+        $this->modalEliminarVisible = false;
+        $this->idAEliminar = null;
+    }
+
 
     public function cerrarModal()
     {
-        $this->modalVisible = false;
+         $this->dispatch('close-modal');
     }
 
     public function resetForForm()
@@ -105,5 +141,8 @@ class Index extends Component
             'telefono',
             'direccion'
         ]);
+
+        $this->resetErrorBag();   // Limpia errores de validación
+        $this->resetValidation(); // Limpia mensajes de validación
     }
 }
