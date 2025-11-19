@@ -10,13 +10,16 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => 'admin@example.com'], // para evitar duplicados
+        $user = User::updateOrCreate(
+            ['email' => 'admin@example.com'],
             [
                 'name' => 'Administrador',
                 'password' => Hash::make('123456789'),
                 'email_verified_at' => now(),
             ]
         );
+
+        // Asignar el rol "Administrador" usando Spatie
+        $user->assignRole('Administrador');
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Livewire\Admin\Users;
 
 // Página principal → redirige al login
 Route::get('/', function () {
@@ -31,3 +32,7 @@ Route::middleware('auth')->group(function () {
         return view('dashboard'); // Vista basada en AdminLTE
     })->name('dashboard');
 });
+
+Route::middleware(['auth', 'role:Administrador'])->get('/admin/users', function () {
+    return view('admin.users');
+})->name('admin.users');

@@ -16,14 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Usuario administrador
-        User::updateOrCreate(
-            ['email' => 'admin@example.com'], // para evitar duplicados si ya existe
-            [
-                'name' => 'Administrador',
-                'password' => Hash::make('123456789'),
-                'email_verified_at' => now(),
-            ]
-        );
+        $this->call(RolesSeeder::class);        // Primero: roles
+        $this->call(AdminUserSeeder::class);   // Luego: usuarios
     }
 }
