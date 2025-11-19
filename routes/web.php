@@ -2,21 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Livewire\Ambientes;
+
 
 // Página principal → redirige al login
 Route::get('/', function () {
     return redirect()->route('login');
-});
+Route::get('/ambientes', Ambientes::class)->name('ambientes.index');
 
-// Login / Register (AdminLTE)
+});
+Route::get('ambientes', \App\Livewire\Ambientes::class)->name('ambientes.index');
+
+
+
+
+// Login (AdminLTE)
 Route::middleware('guest')->group(function () {
-    // Login
     Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);
-
-    // Register
-    // Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
-    // Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
 });
 
 // Logout
@@ -25,9 +28,22 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->middleware('auth')->name('logout');
 
-// Dashboard protegido
+// ============================
+// RUTAS PROTEGIDAS (AUTH)
+// ============================
 Route::middleware('auth')->group(function () {
+
+    // Dashboard
     Route::get('/dashboard', function () {
         return view('dashboard'); // Vista basada en AdminLTE
     })->name('dashboard');
+
+    // CRUD Ambientes
+    Route::get('/ambientes', Ambientes::class)->name('ambientes.index');
+
+});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/ambientes', function () {
+        return view('ambientes.index');
+    })->name('ambientes.index');
 });

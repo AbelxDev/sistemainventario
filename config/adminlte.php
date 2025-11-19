@@ -310,6 +310,12 @@ return [
             'icon' => 'fas fa-users',
             'role' => 'Administrador', // solo visible para admins
         ],
+        [
+            'text' => 'Ambiente',
+            'url' => 'ambientes',
+            'role' => 'Administrador',
+            'icon' => 'fas fa-border-all',
+        ],
     ],
 
 
