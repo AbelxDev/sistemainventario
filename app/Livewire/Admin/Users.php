@@ -6,15 +6,25 @@ use Livewire\Component;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Livewire\WithPagination;
 
 class Users extends Component
 {
+    use WithPagination;
+
+    protected string $paginationTheme = 'bootstrap';
+
     public $name, $email, $password, $role_id;
     public $editMode = false;
     public $deleteId = null;
     public $userId = null;
     public $roles = [];
     public $search = '';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     protected $messages = [
         'name.required' => 'El nombre es obligatorio.',
@@ -188,8 +198,9 @@ class Users extends Component
                     );
             })
             ->orderBy('name')
-            ->get();
+            ->paginate(10); // 👈 PAGINACIÓN
 
         return view('livewire.admin.users', compact('users'));
     }
+
 }

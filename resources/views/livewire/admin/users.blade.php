@@ -27,53 +27,62 @@
         {{-- ============================= --}}
         {{-- TABLA DE USUARIOS --}}
         {{-- ============================= --}}
-        <table class="table table-hover table-striped align-middle">
-            <thead class="bg-light">
-                <tr>
-                    <th><i class="fas fa-user"></i> Nombre</th>
-                    <th><i class="fas fa-envelope"></i> Correo</th>
-                    <th><i class="fas fa-user-tag"></i> Rol</th>
-                    <th class="text-center"><i class="fas fa-cogs"></i> Acciones</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @forelse ($users as $user)
+        <div>
+            <table class="table table-hover table-striped align-middle">
+                <thead class="bg-light">
                     <tr>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-
-                        <td>
-                            @if ($user->roles->first())
-                                <span class="badge bg-primary">
-                                    {{ $user->roles->first()->name }}
-                                </span>
-                            @else
-                                <span class="badge bg-secondary">Sin rol</span>
-                            @endif
-                        </td>
-
-                        <td class="text-center">
-
-                            {{-- Editar --}}
-                            <x-adminlte-button theme="warning" icon="fas fa-edit" label="Editar" class="btn-sm"
-                                wire:click="openEditModal({{ $user->id }})" />
-
-                            {{-- Eliminar --}}
-                            <x-adminlte-button theme="danger" icon="fas fa-trash" label="Eliminar" class="btn-sm"
-                                wire:click="confirmDelete({{ $user->id }})" />
-
-                        </td>
+                        <th>N°</th>
+                        <th><i class="fas fa-user"></i> Nombre</th>
+                        <th><i class="fas fa-envelope"></i> Correo</th>
+                        <th><i class="fas fa-user-tag"></i> Rol</th>
+                        <th class="text-center"><i class="fas fa-cogs"></i> Acciones</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="text-center text-muted py-3">
-                            <i class="fas fa-info-circle"></i> No se encontraron usuarios.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+                    @forelse ($users as $user)
+                        <tr>
+                            {{-- Numeración correcta con paginación --}}
+                            <td>{{ $users->firstItem() + $loop->index }}</td>
+
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+
+                            <td>
+                                @if ($user->roles->first())
+                                    <span class="badge bg-primary">
+                                        {{ $user->roles->first()->name }}
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary">Sin rol</span>
+                                @endif
+                            </td>
+
+                            <td class="text-center">
+                                <x-adminlte-button theme="warning" icon="fas fa-edit" label="Editar" class="btn-sm"
+                                    wire:click="openEditModal({{ $user->id }})" />
+
+                                <x-adminlte-button theme="danger" icon="fas fa-trash" label="Eliminar" class="btn-sm"
+                                    wire:click="confirmDelete({{ $user->id }})" />
+                            </td>
+                        </tr>
+
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-3">
+                                <i class="fas fa-info-circle"></i> No se encontraron usuarios.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            {{-- PAGINACIÓN DE LIVEWIRE --}}
+            <div class="d-flex justify-content-center">
+                {{ $users->links() }}
+            </div>
+        </div>
+
 
     </x-adminlte-card>
 
