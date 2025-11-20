@@ -8,7 +8,6 @@ use App\Livewire\Ambientes;
 // Página principal → redirige al login
 Route::get('/', function () {
     return redirect()->route('login');
-Route::get('/ambientes', Ambientes::class)->name('ambientes.index');
 
 });
 Route::get('ambientes', \App\Livewire\Ambientes::class)->name('ambientes.index');
