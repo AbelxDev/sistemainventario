@@ -308,13 +308,19 @@ return [
             'text' => 'Usuarios',
             'url' => 'admin/users',
             'icon' => 'fas fa-users',
-            'role' => 'Administrador', // solo visible para admins
+            'role' => 'Administrador',
+        ],
+        [
+            'text' => 'Proveedores',
+            'url' => 'proveedores',
+            'icon' => 'fas fa-truck',
+            'role' => 'Administrador',
         ],
         [
             'text' => 'Ambiente',
             'url' => 'ambientes',
-            'role' => 'Administrador',
             'icon' => 'fas fa-border-all',
+            'role' => 'Administrador',
         ],
     ],
 
