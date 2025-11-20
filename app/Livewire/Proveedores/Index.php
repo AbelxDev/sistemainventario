@@ -10,6 +10,8 @@ class Index extends Component
 {
     use WithPagination;
 
+    protected string $paginationTheme = 'bootstrap';
+
     public $modalVisible = false;
     public $modalEliminarVisible = false; // <--- NUEVO MODAL ELIMINAR
     public $nombreAEliminar; // para enviar en el modal de eliminación
@@ -21,6 +23,7 @@ class Index extends Component
     public $ruc;
     public $telefono;
     public $direccion;
+    public $search = '';
 
     public $idAEliminar; // <--- ID para eliminar
 
@@ -47,10 +50,14 @@ class Index extends Component
     public function render()
     {
         return view('livewire.proveedores.index', [
-            'proveedores' => Proveedor::orderBy('id', 'desc')->paginate(10)
+            'proveedores' => Proveedor::where('razon_social', 'like', "%{$this->search}%")
+                ->orWhere('ruc', 'like', "%{$this->search}%")
+                ->orWhere('telefono', 'like', "%{$this->search}%")
+                ->orWhere('direccion', 'like', "%{$this->search}%")
+                ->orderBy('id', 'desc')
+                ->paginate(10)
         ]);
     }
-
     // Abrir modal para crear
     public function crear()
     {
@@ -89,6 +96,7 @@ class Index extends Component
 
         $this->resetForForm();
         $this->dispatch('close-modal');
+        $this->dispatch('success', message: 'Proveedor creado correctamente.');
     }
 
     public function actualizar()
@@ -103,6 +111,7 @@ class Index extends Component
         ]);
 
         $this->dispatch('close-modal');
+        $this->dispatch('success', message: 'Proveedor actualizado correctamente.');
     }
 
     public function confirmarEliminacion($id)
@@ -124,6 +133,7 @@ class Index extends Component
         $this->nombreAEliminar = null; // limpiamos
         $this->modalEliminarVisible = false;
         $this->dispatch('close-delete-modal');
+        $this->dispatch('success', message: 'Proveedor eliminado correctamente.');
     }
 
     public function cerrarModalEliminar()
