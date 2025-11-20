@@ -311,6 +311,9 @@ return [
             'role' => 'Administrador', // solo visible para admins
         ],
         [
+        'text' => 'Proveedores',
+        'url'  => 'proveedores',
+        'icon' => 'fas fa-truck',
             'text' => 'Ambiente',
             'url' => 'ambientes',
             'role' => 'Administrador',

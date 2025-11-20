@@ -38,6 +38,11 @@ Route::middleware('auth')->group(function () {
         return view('dashboard'); // Vista basada en AdminLTE
     })->name('dashboard');
 
+    Route::get('/proveedores', function () {
+    return view('proveedores.index');
+    });
+    Route::get('/tipos-producto', \App\Livewire\TiposProducto\Index::class)->name('tipos-producto.index');
+    Route::get('/productos', \App\Livewire\Productos\Index::class)->name('productos.index');
     // CRUD Ambientes
     Route::get('/ambientes', Ambientes::class)->name('ambientes.index');
 
