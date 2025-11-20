@@ -314,6 +314,10 @@ return [
         'text' => 'Proveedores',
         'url'  => 'proveedores',
         'icon' => 'fas fa-truck',
+            'text' => 'Ambiente',
+            'url' => 'ambientes',
+            'role' => 'Administrador',
+            'icon' => 'fas fa-border-all',
         ],
     ],
 
