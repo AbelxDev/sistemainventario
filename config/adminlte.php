@@ -311,6 +311,18 @@ return [
             'role' => 'Administrador',
         ],
         [
+            'text' => 'Productos',
+            'url' => 'productos',
+            'icon' => 'fas fa-box',
+            'role' => 'Administrador',
+        ],
+        [
+            'text' => 'Tipos Producto',
+            'url' => 'tipos-producto',
+            'icon' => 'fas fa-tags',
+            'role' => 'Administrador',
+        ],
+        [
             'text' => 'Proveedores',
             'url' => 'proveedores',
             'icon' => 'fas fa-truck',

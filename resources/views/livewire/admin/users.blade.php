@@ -78,7 +78,7 @@
             </table>
 
             {{-- PAGINACIÓN DE LIVEWIRE --}}
-            <div class="d-flex justify-content-center">
+            <div class="mt-3">
                 {{ $users->links() }}
             </div>
         </div>
@@ -373,9 +373,5 @@
             });
         </script>
     @endpush
-
-
-
-
 
 </div>
