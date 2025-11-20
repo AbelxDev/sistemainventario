@@ -24,19 +24,24 @@ class Index extends Component
 
     public $idAEliminar; // <--- ID para eliminar
 
-    protected $rules = [
-        'razon_social' => 'required|string|max:255',
-        'ruc' => 'required|string|max:20',
-        'telefono' => 'nullable|numeric',
-        'direccion' => 'nullable|string|max:255',
-    ];
-
+    public function rules()
+    {
+        return [
+            'razon_social' => 'required|string|max:255|unique:proveedors,razon_social,' . $this->proveedor_id,
+            'ruc' => 'required|string|max:20|unique:proveedors,ruc,' . $this->proveedor_id,
+            'telefono' => 'nullable|numeric',
+            'direccion' => 'nullable|string|max:255',
+        ];
+    }
     protected $messages = [
         'razon_social.required' => 'La razón social es obligatoria.',
         'razon_social.max' => 'La razón social no puede exceder los :max caracteres.',
         
         'ruc.required' => 'El RUC es obligatorio.',
         'ruc.max' => 'El RUC no puede tener más de :max caracteres.',
+
+        'razon_social.unique' => 'Esta razón social ya está registrada.',
+        'ruc.unique' => 'Este RUC ya está registrada.',
     ];
 
     public function render()
@@ -82,6 +87,7 @@ class Index extends Component
             'direccion' => $this->direccion,
         ]);
 
+        $this->resetForForm();
         $this->dispatch('close-modal');
     }
 

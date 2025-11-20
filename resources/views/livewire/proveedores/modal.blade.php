@@ -17,7 +17,7 @@
 
                     <div class="col-md-6 col-12">
                         <label class="form-label">Razón Social</label>
-                        <input type="text" class="form-control" wire:model="razon_social">
+                        <input type="text" class="form-control" wire:model="razon_social" maxlength='255'>
                         @error('razon_social') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
@@ -33,6 +33,7 @@
                         <label class="form-label">Teléfono</label>
                         <input type="text" class="form-control"
                             wire:model="telefono"
+                            maxlength="20"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
 
@@ -62,13 +63,18 @@
 </div>
 
 <script>
+    let modalProveedor = null;
+
     window.addEventListener('open-modal', () => {
-        let modal = new bootstrap.Modal(document.getElementById('modalProveedor'));
-        modal.show();
+        if (!modalProveedor) {
+            modalProveedor = new bootstrap.Modal(document.getElementById('modalProveedor'));
+        }
+        modalProveedor.show();
     });
 
     window.addEventListener('close-modal', () => {
-        let modal = bootstrap.Modal.getInstance(document.getElementById('modalProveedor'));
-        if (modal) modal.hide();
+        if (modalProveedor) {
+            modalProveedor.hide();
+        }
     });
 </script>
