@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('ambientes', function (Blueprint $table) {
         $table->id();
-        $table->integer('numero')->nullable();
         $table->string('nombre');
         $table->string('ubicacion');
         $table->timestamps();

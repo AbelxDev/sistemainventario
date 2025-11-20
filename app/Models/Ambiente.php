@@ -15,4 +15,12 @@ class Ambiente extends Model
         'nombre',
         'ubicacion',
     ];
+
+    public function productos()
+    {
+        return $this->belongsToMany(Producto::class, 'producto_ambiente', 'ambiente_id', 'producto_id')
+            ->withPivot('cantidad')
+            ->withTimestamps();
+    }
+
 }

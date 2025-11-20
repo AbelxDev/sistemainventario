@@ -1,25 +1,45 @@
 <?php
 
+// app/Models/Producto.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Producto extends Model
 {
-    public function tipo(): BelongsTo
+    protected $fillable = [
+        'codigo',
+        'nombre',
+        'descripcion',
+        'tipo_id',
+        'proveedor_principal_id',
+    ];
+
+    public function tipo()
     {
         return $this->belongsTo(TipoProducto::class, 'tipo_id');
     }
 
-    public function proveedorPrincipal(): BelongsTo
+    public function proveedorPrincipal()
     {
         return $this->belongsTo(Proveedor::class, 'proveedor_principal_id');
     }
 
-    public function proveedores(): BelongsToMany
+    public function proveedores()
     {
-        return $this->belongsToMany(Proveedor::class, 'producto_proveedor');
+        return $this->belongsToMany(
+            Proveedor::class,
+            'producto_proveedor',
+            'producto_id',
+            'proveedor_id'
+        )->withTimestamps();
     }
+
+    public function ambientes()
+    {
+        return $this->belongsToMany(Ambiente::class, 'producto_ambiente', 'producto_id', 'ambiente_id')
+            ->withPivot('cantidad')
+            ->withTimestamps();
+    }
+
 }

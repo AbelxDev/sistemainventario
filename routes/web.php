@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\Ambientes;
+use App\Livewire\Productos\Index;
 
 
 // Página principal → redirige al login
@@ -10,10 +11,6 @@ Route::get('/', function () {
     return redirect()->route('login');
 
 });
-Route::get('ambientes', \App\Livewire\Ambientes::class)->name('ambientes.index');
-
-
-
 
 // Login (AdminLTE)
 Route::middleware('guest')->group(function () {
@@ -38,18 +35,24 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::get('/proveedores', function () {
-    return view('proveedores.index');
+        return view('proveedores.index');
     });
-    Route::get('/tipos-producto', \App\Livewire\TiposProducto\Index::class)->name('tipos-producto.index');
-    Route::get('/productos', \App\Livewire\Productos\Index::class)->name('productos.index');
-    // CRUD Ambientes
-    Route::get('/ambientes', Ambientes::class)->name('ambientes.index');
 
-});
-Route::middleware(['auth'])->group(function () {
+    Route::get('/tipos-producto', function () {
+        return view('tipos-producto.index');
+    });
+
+    Route::get('/productos', function () {
+        return view('productos.index');
+    });
+
     Route::get('/ambientes', function () {
         return view('ambientes.index');
     })->name('ambientes.index');
+
+});
+Route::middleware(['auth'])->group(function () {
+
 });
 
 Route::middleware(['auth', 'role:Administrador'])->get('/admin/users', function () {

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Proveedor extends Model
 {
+    protected $table = 'proveedors';
 
     use HasFactory;
 
@@ -25,8 +26,14 @@ class Proveedor extends Model
         return $this->hasMany(Producto::class, 'proveedor_principal_id');
     }
 
-    public function productos(): BelongsToMany
+    public function productos()
     {
-        return $this->belongsToMany(Producto::class, 'producto_proveedor');
+        return $this->belongsToMany(
+            Producto::class,
+            'producto_proveedor',
+            'proveedor_id',
+            'producto_id'
+        )->withTimestamps();
     }
+
 }

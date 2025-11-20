@@ -374,8 +374,4 @@
         </script>
     @endpush
 
-
-
-
-
 </div>
