@@ -347,9 +347,10 @@
 
                 window.addEventListener('success', event => {
                     Swal.fire({
-                        position: "top-end",
+                        position: "center",
                         icon: "success",
                         title: event.detail.message,
+                        width: "30rem",
                         showConfirmButton: false,
                         timer: 1500
                     });
