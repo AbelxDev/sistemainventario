@@ -1,0 +1,20 @@
+.tooltip-css {
+    position: relative;
+    cursor: pointer;
+}
+
+.tooltip-css:hover::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 105%;
+    background: #333;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    white-space: normal;
+    z-index: 99999;
+    min-width: 200px;
+    max-width: 350px;
+}

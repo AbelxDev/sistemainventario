@@ -5,7 +5,7 @@
             <div class="col-md-9">
                 <x-adminlte-input name="search" wire:model.live="search"
                     label="Buscar proveedor:"
-                    placeholder="Razón Social, RUC, Teléfono o Dirección"
+                    placeholder="Buscar por Razón Social, RUC, Teléfono o Dirección"
                     igroup-size="sm">
                     <x-slot name="appendSlot">
                         <x-adminlte-button theme="dark" icon="fas fa-search" />
@@ -22,11 +22,11 @@
                 <thead>
                 <tr>
                     <th>N°</th>
-                    <th>Razón Social</th>
-                    <th>RUC</th>
-                    <th>Teléfono</th>
-                    <th>Dirección</th>
-                    <th>Acciones</th>
+                    <th> <i class="fas fa-building"></i> Razón Social</th>
+                    <th><i class="fas fa-id-card"></i> RUC</th>
+                    <th><i class="fas fa-phone"></i> Teléfono</th>
+                    <th><i class="fas fa-map-marker-alt"></i> Dirección</th>
+                    <th><i class="fas fa-cogs"></i> Acciones</th>
                 </tr>
                 </thead>
 
@@ -69,16 +69,92 @@
 
 @push('js')
 <script>
-document.addEventListener('success', event => {
-    Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: event.detail.message,
-        showConfirmButton: false,
-        timer: 1500
+    // --- ALERTA SWEETALERT2 ---
+    document.addEventListener('success', (event) => {
+        Swal.fire({
+            icon: "success",
+            title: event.detail.message,
+            showConfirmButton: false,
+            timer: 1500,
+            position: "center"
+        });
     });
-});
 </script>
 @endpush
+@push('css')
+<style>
+    @media (min-width: 992px) { /* pantallas grandes */
+        .custom-modal {
+            margin-top: -120px !important;
+        }
+    }
 
+        @media (max-width: 991px) { /* tablets y móviles */
+            .custom-modal {
+                margin-top: 0 !important;
+        }
+    }
+
+    /* Tamaño normal (desktop) */
+    thead th {
+        font-size: 16px;
+    }
+    thead th i {
+        font-size: 16px;
+        margin-right: 4px;
+    }
+
+    /* Tablets (pantallas medianas) */
+    @media (max-width: 991px) {
+        thead th {
+            font-size: 14px;
+        }
+        thead th i {
+            font-size: 14px;
+        }
+    }
+
+    /* Celulares (pantallas pequeñas) */
+    @media (max-width: 768px) {
+        thead th {
+            font-size: 12px;
+        }
+        thead th i {
+            font-size: 12px;
+        }
+    }
+
+    /* Celulares muy pequeños */
+    @media (max-width: 576px) {
+        thead th {
+            font-size: 11px;
+        }
+        thead th i {
+            font-size: 11px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        table td, table th {
+            padding: 6px 8px !important;
+        }
+    }
+
+    /* Fix para SweetAlert centrado en AdminLTE */
+    .swal2-container {
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        right: 0 !important;
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .swal2-popup {
+        margin: auto !important;
+    }
+
+</style>
+@endpush('css')
 
