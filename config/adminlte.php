@@ -331,7 +331,7 @@ return [
         [
             'text' => 'Ambiente',
             'url' => 'ambientes',
-            'icon' => 'fas fa-border-all',
+            'icon' => 'fas fa-leaf',
             'role' => 'Administrador',
         ],
     ],

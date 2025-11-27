@@ -38,19 +38,41 @@
                         <td>{{ $item->ruc }}</td>
                         <td>{{ $item->telefono }}</td>
                         <td>{{ $item->direccion }}</td>
-                        <td>
-                            <div class="d-flex align-items-center" style="gap: 12px">
-                                <button class="btn btn-warning btn-sm"
-                                        wire:click="editar({{ $item->id }})">
-                                    <i class="fa fa-edit"></i>
-                                </button>
+                        
+                        <!--mensajes con alphine-->
+                         <td class="text-center">
+                                <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
+                                        <x-adminlte-button theme="warning" icon="fas fa-edit" class="btn-sm"
+                                            wire:click="editar({{ $item->id }})"
+                                            @mouseenter="tooltip = true"
+                                            @mouseleave="tooltip = false" />
 
-                                <button class="btn btn-danger btn-sm"
-                                        wire:click="confirmarEliminacion({{ $item->id }})">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
+                                        <!-- TOOLTIP ALPINE -->
+                                        <div x-show="tooltip"
+                                            x-transition
+                                            class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                            style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                            Editar proveedor
+                                        </div>
+                                </div>
+
+                                    <!-- BOTÓN ELIMINAR -->
+                                <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
+                                        <x-adminlte-button theme="danger" icon="fas fa-trash" class="btn-sm"
+                                            wire:click="confirmarEliminacion({{ $item->id }})"
+                                            @mouseenter="tooltip = true"
+                                            @mouseleave="tooltip = false" />
+
+                                        <!-- TOOLTIP ALPINE -->
+                                        <div x-show="tooltip"
+                                            x-transition
+                                            class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                            style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                            Eliminar proveedor
+                                        </div>
+                                </div>
+                            </td>
+
                     </tr>
                 @endforeach
                 </tbody>
