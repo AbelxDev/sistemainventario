@@ -19,7 +19,7 @@
             {{-- BOTÓN NUEVO --}}
             <div class="col-md-3 d-flex align-items-end justify-content-end">
                 <x-adminlte-button label="Nuevo Ambiente" theme="primary" icon="fas fa-plus"
-                    wire:click="crear" />
+                    wire:click="crear"/>
             </div>
 
         </div> {{-- /row --}}
@@ -27,8 +27,8 @@
         {{-- ============================= --}}
         {{-- TABLA --}}
         {{-- ============================= --}}
-        <div>
-            <table class="table table-hover table-striped align-middle">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle" style="min-width: 900px">
                 <thead class="bg-light">
                     <tr>
                         <th>N°</th>
@@ -46,13 +46,40 @@
                             <td>{{ $ambiente->nombre }}</td>
                             <td>{{ $ambiente->ubicacion }}</td>
 
+                            <!-- mensajes con alphine -->
                             <td class="text-center">
-                                <x-adminlte-button theme="warning" icon="fas fa-edit" class="btn-sm"
-                                    wire:click="editar({{ $ambiente->id }})" />
+                                <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
+                                        <x-adminlte-button theme="warning" icon="fas fa-edit" class="btn-sm"
+                                            wire:click="editar({{ $ambiente->id }})"
+                                            @mouseenter="tooltip = true"
+                                            @mouseleave="tooltip = false" />
 
-                                <x-adminlte-button theme="danger" icon="fas fa-trash" class="btn-sm"
-                                    wire:click="confirmarEliminar({{ $ambiente->id }})" />
+                                        <!-- TOOLTIP ALPINE -->
+                                        <div x-show="tooltip"
+                                            x-transition
+                                            class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                            style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                            Editar ambiente
+                                        </div>
+                                </div>
+
+                                    <!-- BOTÓN ELIMINAR -->
+                                <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
+                                        <x-adminlte-button theme="danger" icon="fas fa-trash" class="btn-sm"
+                                            wire:click="confirmarEliminar({{ $ambiente->id }})"
+                                            @mouseenter="tooltip = true"
+                                            @mouseleave="tooltip = false" />
+
+                                        <!-- TOOLTIP ALPINE -->
+                                        <div x-show="tooltip"
+                                            x-transition
+                                            class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                            style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                            Eliminar ambiente
+                                        </div>
+                                </div>
                             </td>
+
                         </tr>
                     @empty
                         <tr>
@@ -256,5 +283,7 @@
         });
 
     });
+
+
 </script>
 @endpush
