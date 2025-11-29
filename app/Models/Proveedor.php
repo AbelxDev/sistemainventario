@@ -36,4 +36,10 @@ class Proveedor extends Model
         )->withTimestamps();
     }
 
+    public function facturas()
+    {
+        return $this->hasMany(Factura::class);
+    }
+
+
 }

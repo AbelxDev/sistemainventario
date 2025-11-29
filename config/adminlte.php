@@ -334,6 +334,12 @@ return [
             'icon' => 'fas fa-border-all',
             'role' => 'Administrador',
         ],
+        [
+            'text' => 'Facturas',
+            'url' => 'facturas',
+            'icon' => 'fas fa-file-invoice',
+            'role' => 'Administrador',
+        ],
     ],
 
 
