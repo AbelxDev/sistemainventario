@@ -55,23 +55,40 @@
                         <td>{{ $p->tipo->nombre }}</td>
                         <td>{{ $p->proveedorPrincipal->razon_social ?? '' }}</td>
 
-                        <td>
-                            <div class="btn-group">
+                        <!--alphine-->
+                        <td class="text-center">
+                            <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
+                                    <x-adminlte-button theme="warning" icon="fas fa-edit" class="btn-sm"
+                                        wire:click="openEditModal({{ $p->id }})"
+                                        @mouseenter="tooltip = true"
+                                        @mouseleave="tooltip = false" />
 
-                                {{-- EDITAR --}}
-                                <button class="btn btn-xs btn-warning" wire:click="openEditModal({{ $p->id }})">
-                                    <i class="fas fa-edit"></i>
-                                </button>
+                                    <!-- TOOLTIP ALPINE -->
+                                    <div x-show="tooltip"
+                                        x-transition
+                                        class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                        style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                        Editar producto
+                                    </div>
+                            </div>
 
-                                {{-- ELIMINAR --}}
-                                <button class="btn btn-xs btn-danger"
-                                    onclick="confirm('¿Seguro que deseas eliminar este producto?') || event.stopImmediatePropagation()"
-                                    wire:click="delete({{ $p->id }})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <!-- BOTÓN ELIMINAR -->
+                            <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
+                                    <x-adminlte-button theme="danger" icon="fas fa-trash" class="btn-sm"
+                                        wire:click="delete({{ $p->id }})"
+                                        @mouseenter="tooltip = true"
+                                        @mouseleave="tooltip = false" />
 
+                                    <!-- TOOLTIP ALPINE -->
+                                    <div x-show="tooltip"
+                                        x-transition
+                                        class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                        style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                        Eliminar producto
+                                    </div>
                             </div>
                         </td>
+                        
                     </tr>
 
                 @empty

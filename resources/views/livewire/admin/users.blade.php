@@ -57,14 +57,40 @@
                                     <span class="badge bg-secondary">Sin rol</span>
                                 @endif
                             </td>
+                                
+                                <td class="text-center">
+                                <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
+                                        <x-adminlte-button theme="warning" icon="fas fa-edit" class="btn-sm"
+                                            wire:click="openEditModal({{ $user->id }})"
+                                            @mouseenter="tooltip = true"
+                                            @mouseleave="tooltip = false" />
 
-                            <td class="text-center">
-                                <x-adminlte-button theme="warning" icon="fas fa-edit" label="Editar" class="btn-sm"
-                                    wire:click="openEditModal({{ $user->id }})" />
+                                        <!-- TOOLTIP ALPINE -->
+                                        <div x-show="tooltip"
+                                            x-transition
+                                            class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                            style="bottom: 120%; left: 50%; transform: translateX(-50%); white-space: nowrap; z-index: 9999;">
+                                            Editar usuario
+                                        </div>
+                                </div>
 
-                                <x-adminlte-button theme="danger" icon="fas fa-trash" label="Eliminar" class="btn-sm"
-                                    wire:click="confirmDelete({{ $user->id }})" />
+                                    <!-- BOTÓN ELIMINAR -->
+                                <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
+                                        <x-adminlte-button theme="danger" icon="fas fa-trash" class="btn-sm"
+                                            wire:click="confirmDelete({{ $user->id }})"
+                                            @mouseenter="tooltip = true"
+                                            @mouseleave="tooltip = false" />
+
+                                        <!-- TOOLTIP ALPINE -->
+                                        <div x-show="tooltip"
+                                            x-transition
+                                            class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                            style="bottom: 120%; left: 50%; transform: translateX(-50%); white-space: nowrap; z-index: 9999;">
+                                            Eliminar usuario
+                                        </div>
+                                </div>
                             </td>
+
                         </tr>
 
                     @empty
@@ -347,9 +373,10 @@
 
                 window.addEventListener('success', event => {
                     Swal.fire({
-                        position: "top-end",
+                        position: "center",
                         icon: "success",
                         title: event.detail.message,
+                        width: "30rem",
                         showConfirmButton: false,
                         timer: 1500
                     });

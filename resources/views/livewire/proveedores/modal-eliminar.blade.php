@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalEliminarProveedor" tabindex="-1" aria-hidden="true" wire:ignore.self>
+<div class="modal fade custom-modal" id="modalEliminarProveedor" tabindex="-1" aria-hidden="true" wire:ignore.self>
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 

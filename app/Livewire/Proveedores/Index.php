@@ -33,7 +33,12 @@ class Index extends Component
             'razon_social' => 'required|string|max:255|unique:proveedors,razon_social,' . $this->proveedor_id,
             'ruc' => 'required|string|max:20|unique:proveedors,ruc,' . $this->proveedor_id,
             'telefono' => 'nullable|numeric',
-            'direccion' => 'nullable|string|max:255',
+            'direccion' => [
+                'nullable',
+                'string',
+                'max:100',
+                'regex:/^[A-Za-z0-9ÁÉÍÓÚáéíóúÑñ#\.,\-\(\)\/\s]+$/'
+            ],
         ];
     }
     protected $messages = [
@@ -49,15 +54,21 @@ class Index extends Component
 
     public function render()
     {
+
+        $this->dispatch('refresh-tooltips');
+
         return view('livewire.proveedores.index', [
-            'proveedores' => Proveedor::where('razon_social', 'like', "%{$this->search}%")
-                ->orWhere('ruc', 'like', "%{$this->search}%")
-                ->orWhere('telefono', 'like', "%{$this->search}%")
-                ->orWhere('direccion', 'like', "%{$this->search}%")
-                ->orderBy('id', 'desc')
-                ->paginate(10)
+            'proveedores' => Proveedor::where(function ($query) {
+        $query->where('razon_social', 'like', "%{$this->search}%")
+            ->orWhere('ruc', 'like', "%{$this->search}%")
+            ->orWhere('telefono', 'like', "%{$this->search}%")
+            ->orWhere('direccion', 'like', "%{$this->search}%");
+        })
+        ->orderBy('id', 'desc')
+        ->paginate(10)
         ]);
     }
+
     // Abrir modal para crear
     public function crear()
     {
@@ -142,6 +153,10 @@ class Index extends Component
         $this->idAEliminar = null;
     }
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function cerrarModal()
     {
