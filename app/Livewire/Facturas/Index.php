@@ -7,12 +7,13 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Factura;
 use App\Models\Proveedor;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 class Index extends Component
 {
     use WithPagination, WithFileUploads;
+
+    protected string $paginationTheme = 'bootstrap';
 
     public $search = '';
     public $modalMode = 'create';
@@ -22,10 +23,37 @@ class Index extends Component
     public $fecha;
     public $proveedor_id;
     public $estado = 'pendiente';
-    public $pdf_file;   // Archivo subido temporal
-    public $pdf_ruta;   // Ruta final del PDF guardado
+
+    public $pdf_file;   // archivo temporal
+    public $pdf_ruta;   // ruta final guardada
+    public $pdf_preview_path;
+
 
     public $proveedores = [];
+
+    public $confirmarEliminacion = false;
+
+    protected $messages = [
+        'numero.required' => 'El número es obligatorio.',
+        'numero.unique'   => 'Este número ya existe.',
+        'fecha.required'  => 'La fecha es obligatoria.',
+        'proveedor_id.required' => 'Debe seleccionar un proveedor.',
+        'estado.required' => 'El estado es obligatorio.',
+        'pdf_file.mimes'  => 'El archivo debe ser un PDF.',
+        'pdf_file.max'    => 'El archivo PDF no puede superar los 5MB.',
+    ];
+
+    protected function rules()
+    {
+        return [
+            'numero' => 'required|string|max:50|unique:facturas,numero,' . $this->factura_id,
+            'fecha' => 'required|date',
+            'proveedor_id' => 'required|exists:proveedors,id',
+            'estado' => 'required|in:pendiente,procesada,anulada',
+            'pdf_file' => 'nullable|mimes:pdf|max:5120'
+        ];
+    }
+
 
     public function mount()
     {
@@ -37,16 +65,7 @@ class Index extends Component
         $this->resetPage();
     }
 
-    protected function rules()
-    {
-        return [
-            'numero' => 'required|string|max:50|unique:facturas,numero,' . $this->factura_id,
-            'fecha' => 'required|date',
-            'proveedor_id' => 'required|exists:proveedors,id',
-            'estado' => 'required|string|in:pendiente,procesada,anulada',
-            'pdf_file' => 'nullable|file|mimes:pdf|max:5120',
-        ];
-    }
+
 
     private function resetForm()
     {
@@ -58,43 +77,41 @@ class Index extends Component
             'estado',
             'pdf_file',
             'pdf_ruta',
+            'pdf_preview_path',
         ]);
 
         $this->estado = 'pendiente';
-        $this->proveedores = Proveedor::orderBy('razon_social')->get();
     }
 
-    // ================= MODAL CREAR =================
+
+
+    // ================================
+    //           CREAR
+    // ================================
     public function openCreateModal()
     {
         $this->modalMode = 'create';
         $this->resetForm();
-        $this->pdf_ruta = null;
-        $this->dispatch('open-factura-modal');
+
+        $this->dispatch('abrirModalForm');
     }
+
 
     public function save()
     {
-
         $this->validate();
 
-        $rutaPdf = null;
+        // mover PDF del temporal a carpeta final
+        $path = null;
 
         if ($this->pdf_file) {
+            $path = $this->pdf_file->store('facturas', 'public');
+        }
 
-            // Ruta temporal del archivo subido por Livewire
-            $tmpPath = $this->pdf_file->getRealPath();
-
-            // Obtener extension real
-            $extension = $this->pdf_file->getClientOriginalExtension() ?: 'pdf';
-
-            // Nombre final seguro
-            $nombreFinal = 'facturas/' . sha1(uniqid() . microtime()) . '.' . $extension;
-
-            // Copiar desde el temporal hacia storage/app/public/facturas
-            Storage::disk('public')->put($nombreFinal, file_get_contents($tmpPath));
-
-            $rutaPdf = $nombreFinal;
+        // eliminar archivo temporal de la vista previa
+        if ($this->pdf_preview_path) {
+            Storage::disk('public')->delete($this->pdf_preview_path);
+            $this->pdf_preview_path = null;
         }
 
         Factura::create([
@@ -102,16 +119,19 @@ class Index extends Component
             'fecha' => $this->fecha,
             'proveedor_id' => $this->proveedor_id,
             'estado' => $this->estado,
-            'pdf_ruta' => $rutaPdf,
+            'pdf_ruta' => $path
         ]);
 
-        session()->flash('success', 'Factura registrada correctamente.');
-
-        $this->dispatch('close-factura-modal');
-        $this->resetForm();
+        $this->dispatch('cerrarModalForm');
+        $this->dispatch('success', message: 'Factura creada correctamente!');
     }
 
-    // ================= MODAL EDITAR =================
+
+
+
+    // ================================
+    //           EDITAR
+    // ================================
     public function openEditModal($id)
     {
         $this->modalMode = 'edit';
@@ -125,65 +145,70 @@ class Index extends Component
         $this->estado = $f->estado;
         $this->pdf_ruta = $f->pdf_ruta;
 
+        // limpiar vista previa
+        $this->pdf_preview_path = null;
         $this->pdf_file = null;
 
-        $this->dispatch('open-factura-modal');
+        $this->dispatch('abrirModalForm');
     }
 
-    public function updatedPdfFile()
-    {
-        dd("LLEGO OK", $this->pdf_file);
-    }
 
 
     public function update()
     {
         $this->validate();
 
-        $f = Factura::findOrFail($this->factura_id);
+        $factura = Factura::findOrFail($this->factura_id);
 
         if ($this->pdf_file) {
 
-            // Borrar PDF anterior
-            if ($f->pdf_ruta && Storage::disk('public')->exists($f->pdf_ruta)) {
-                Storage::disk('public')->delete($f->pdf_ruta);
+            // borrar pdf anterior
+            if ($factura->pdf_ruta && Storage::disk('public')->exists($factura->pdf_ruta)) {
+                Storage::disk('public')->delete($factura->pdf_ruta);
             }
 
-            // Copiar nuevo archivo
-            $tmpPath = $this->pdf_file->getRealPath();
-            $extension = $this->pdf_file->getClientOriginalExtension() ?: 'pdf';
-            $nombreFinal = 'facturas/' . sha1(uniqid() . microtime()) . '.' . $extension;
-
-            Storage::disk('public')->put($nombreFinal, file_get_contents($tmpPath));
-
-            $this->pdf_ruta = $nombreFinal;
+            // guardar nuevo pdf
+            $factura->pdf_ruta = $this->pdf_file->store('facturas', 'public');
         }
 
-        $f->update([
+        // eliminar temporal si existía
+        if ($this->pdf_preview_path) {
+            Storage::disk('public')->delete($this->pdf_preview_path);
+            $this->pdf_preview_path = null;
+        }
+
+        $factura->update([
             'numero' => $this->numero,
             'fecha' => $this->fecha,
             'proveedor_id' => $this->proveedor_id,
-            'estado' => $this->estado,
-            'pdf_ruta' => $this->pdf_ruta,
+            'estado' => $this->estado
         ]);
 
-        session()->flash('success', 'Factura actualizada correctamente.');
-
-        $this->dispatch('close-factura-modal');
-        $this->resetForm();
+        $this->dispatch('cerrarModalForm');
+        $this->dispatch('success', message: 'Factura actualizada correctamente!');
     }
 
-    // ================= ELIMINAR =================
-    public function delete($id)
-    {
-        $f = Factura::findOrFail($id);
 
-        if (Schema::hasTable('factura_detalles')) {
-            if ($f->detalles()->count() > 0) {
-                session()->flash('error', 'No se puede eliminar la factura porque tiene detalles registrados.');
-                return;
-            }
-        }
+
+
+    // ================================
+    //           ELIMINAR
+    // ================================
+    public function confirmarEliminar($id)
+    {
+        $this->factura_id = $id;
+        $this->dispatch('abrirModalEliminar');
+    }
+
+    public function cancelarEliminar()
+    {
+        $this->dispatch('cerrarModalEliminar');
+    }
+
+
+    public function eliminarDefinitivo()
+    {
+        $f = Factura::findOrFail($this->factura_id);
 
         if ($f->pdf_ruta && Storage::disk('public')->exists($f->pdf_ruta)) {
             Storage::disk('public')->delete($f->pdf_ruta);
@@ -191,22 +216,50 @@ class Index extends Component
 
         $f->delete();
 
-        session()->flash('success', 'Factura eliminada correctamente.');
+        $this->dispatch('cerrarModalEliminar');
+        $this->dispatch('success', message: 'Factura eliminada correctamente!');
     }
 
+
+
+    // ================================
+    //           RENDER
+    // ================================
     public function render()
     {
         $facturas = Factura::with('proveedor')
             ->where(function ($q) {
                 $q->where('numero', 'like', "%{$this->search}%")
-                    ->orWhereHas('proveedor', function ($q2) {
-                        $q2->where('razon_social', 'like', "%{$this->search}%");
-                    });
+                  ->orWhereHas('proveedor', function ($q2) {
+                      $q2->where('razon_social', 'like', "%{$this->search}%");
+                  });
             })
             ->orderBy('fecha', 'desc')
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(20);
 
         return view('livewire.facturas.index', compact('facturas'));
     }
+
+
+    public function updatedPdfFile()
+    {
+        if ($this->pdf_file) {
+            $this->pdf_preview_path = $this->pdf_file->store('tmp', 'public');
+        }
+    }
+
+    public $resetKey = 0;
+
+    public function resetModalFactura()
+    {
+        $this->reset(['pdf_file', 'pdf_preview_path']);
+        $this->resetKey++; // fuerza a regenerar el input file
+    }
+
+    protected $listeners = [
+        'resetModalFactura' => 'resetModalFactura'
+    ];
+
+
+
 }
