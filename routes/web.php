@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Livewire\Ambientes;
-use App\Livewire\Productos\Index;
 
 
 // Página principal → redirige al login
@@ -49,6 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/ambientes', function () {
         return view('ambientes.index');
     })->name('ambientes.index');
+
+    Route::get('/facturas', function () {
+        return view('facturas.index');
+    })->name('facturas.index');
 
 });
 Route::middleware(['auth'])->group(function () {
