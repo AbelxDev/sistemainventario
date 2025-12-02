@@ -277,21 +277,64 @@
                     </div>
                 </div>
 
-                {{-- FOOTER --}}
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        <i class="fas fa-times-circle mr-1"></i> Cancelar
-                    </button>
+                {{-- ===================================== --}}
+                {{-- ACORDEÓN DE DETALLES DE FACTURA --}}
+                {{-- ===================================== --}}
+                <div class="mt-4" wire:ignore.self>
 
-                    <button type="submit"
-                        class="btn {{ $modalMode === 'create' ? 'btn-primary' : 'btn-success' }}"
-                        wire:click="{{ $modalMode === 'create' ? 'save' : 'update' }}"
-                    >
-                        <i class="fas {{ $modalMode === 'create' ? 'fa-plus-circle' : 'fa-save' }} mr-1"></i>
-                        {{ $modalMode === 'create' ? 'Crear Factura' : 'Actualizar Factura' }}
-                    </button>
+                    <div class="accordion" id="accordionDetalle">
+
+                        <div class="card">
+                            <div class="card-header bg-info" id="headingDetalle">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link text-white" type="button"
+                                        data-toggle="collapse" data-target="#collapseDetalle" aria-expanded="true">
+                                        <i class="fas fa-box-open"></i> Detalles de Factura
+                                    </button>
+                                </h2>
+                            </div>
+
+                            <div id="collapseDetalle" class="collapse" aria-labelledby="headingDetalle" data-parent="#accordionDetalle">
+                                <div class="card-body">
+
+                                    {{-- Componente Livewire del detalle --}}
+                                    @livewire('factura-detalle.index', ['facturaId' => $factura_id ?? null], key($factura_id))
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
+                {{-- FOOTER --}}
+                <div class="modal-footer bg-light d-flex justify-content-between">
+
+                    {{-- BOTÓN AGREGAR DETALLE (IZQUIERDA) --}}
+                    <button 
+                        type="button" 
+                        class="btn btn-outline-info"
+                        wire:click="$emit('toggleDetalle')"
+                    >
+                        <i class="fas fa-plus"></i> Agregar Detalle
+                    </button>
+
+                    <div>
+                        {{-- BOTÓN CANCELAR --}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times-circle mr-1"></i> Cancelar
+                        </button>
+
+                        {{-- BOTÓN CREAR / ACTUALIZAR --}}
+                        <button type="submit"
+                            class="btn {{ $modalMode === 'create' ? 'btn-primary' : 'btn-success' }}"
+                            wire:click="{{ $modalMode === 'create' ? 'save' : 'update' }}"
+                        >
+                            <i class="fas {{ $modalMode === 'create' ? 'fa-plus-circle' : 'fa-save' }} mr-1"></i>
+                            {{ $modalMode === 'create' ? 'Crear Factura' : 'Actualizar Factura' }}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -352,6 +395,10 @@ document.addEventListener('livewire:init', () => {
     // Abrir / cerrar modal eliminar
     Livewire.on('abrirModalEliminar', () => $('#modalEliminarFactura').modal('show'));
     Livewire.on('cerrarModalEliminar', () => $('#modalEliminarFactura').modal('hide'));
+
+    Livewire.on('toggleDetalle', () => {
+    $('#collapseDetalle').collapse('toggle');
+    });
 
     // Alerts de éxito
     Livewire.on('success', (data) => {
