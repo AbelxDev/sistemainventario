@@ -164,181 +164,167 @@
     {{-- ========================================= --}}
     {{-- MODAL CREAR / EDITAR --}}
     {{-- ========================================= --}}
-    <div wire:ignore.self class="modal fade" id="modalFactura" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
 
-                {{-- HEADER --}}
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title">
-                        <i class="fas {{ $modalMode === 'create' ? 'fas fa-file-invoice' : 'fa-edit' }}"></i>
-                        {{ $modalMode === 'create' ? ' Nueva Factura' : 'Editar Factura' }}
-                    </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
+        <div wire:ignore.self class="modal fade" id="modalFactura" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
 
-                {{-- BODY --}}
-                <div class="modal-body">
-                    <div class="row">
-                        {{-- Número --}}
-                        <div class="col-md-6 mb-3">
-                            <label>Número</label>
-                            <input type="text" class="form-control" wire:model="numero">
-                            @error('numero') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-
-                        {{-- Fecha --}}
-                        <div class="col-md-6">
-                            <label>Fecha</label>
-                            <input type="date" class="form-control" wire:model="fecha">
-                            @error('fecha') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
+                    {{-- HEADER --}}
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title">
+                            <i class="fas {{ $modalMode === 'create' ? 'fas fa-file-invoice' : 'fa-edit' }}"></i>
+                            {{ $modalMode === 'create' ? ' Nueva Factura' : 'Editar Factura' }}
+                        </h5>
+                        <button type="button" class="close text-white" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
                     </div>
 
-                    <div class="row mt-3">
-                        {{-- Proveedor --}}
-                        <div class="col-md-6">
-                            <label>Proveedor</label>
-                            <select class="form-control" wire:model="proveedor_id">
-                                <option value="">Seleccione...</option>
-                                @foreach ($proveedores as $p)
-                                    <option value="{{ $p->id }}">{{ $p->razon_social }}</option>
-                                @endforeach
-                            </select>
-                            @error('proveedor_id') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-
-                        {{-- Estado --}}
-                        <div class="col-md-6">
-                            <label>Estado</label>
-                            <select class="form-control" wire:model="estado">
-                                <option value="pendiente">Pendiente</option>
-                                <option value="procesada">Procesada</option>
-                                <option value="anulada">Anulada</option>
-                            </select>
-                            @error('estado') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-
-                    
-                    {{-- PDF --}}
-                    <div 
-                        class="mt-4"
-                        x-data="pdfUploader"
-                        @reset-pdf.window="reset()"
-                        x-cloak
-                    >
-                        <label class="font-weight-bold mb-2">Archivo PDF</label>
-
-                        {{-- Zona de arrastrar / seleccionar --}}
-                        <div
-                            style="cursor: pointer";
-                            class="border rounded p-4 text-center bg-light "
-                            :class="{ 
-                                'border-primary shadow': fileName !== '', 
-                                'border-danger': isDragging 
-                            }"
-                            @click="openFileDialog()"
-                            @dragover.prevent="isDragging = true"
-                            @dragleave.prevent="isDragging = false"
-                            @drop.prevent="handleDrop($event)"
-                        >
-                            <i class="fas fa-file-pdf fa-3x text-danger mb-2"></i>
-
-                            <div class="mt-2">
-                                <strong x-text="fileName || 'Haz clic o arrastra un PDF aquí'"></strong>
+                    {{-- BODY --}}
+                    <div class="modal-body">
+                        <div class="row">
+                            {{-- Número --}}
+                            <div class="col-md-6 mb-3">
+                                <label>Número</label>
+                                <input type="text" class="form-control" wire:model="numero">
+                                @error('numero') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
-                            <input 
-                                type="file" 
-                                accept="application/pdf"
-                                wire:model="pdf_file"
-                                class="d-none"
-                                x-ref="pdfInput"
-                                @change="updateFileName($event)"
+                            {{-- Fecha --}}
+                            <div class="col-md-6">
+                                <label>Fecha</label>
+                                <input type="date" class="form-control" wire:model="fecha">
+                                @error('fecha') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            {{-- Proveedor --}}
+                            <div class="col-md-6">
+                                <label>Proveedor</label>
+                                <select class="form-control" wire:model="proveedor_id">
+                                    <option value="">Seleccione...</option>
+                                    @foreach ($proveedores as $p)
+                                        <option value="{{ $p->id }}">{{ $p->razon_social }}</option>
+                                    @endforeach
+                                </select>
+                                @error('proveedor_id') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+
+                            {{-- Estado --}}
+                            <div class="col-md-6">
+                                <label>Estado</label>
+                                <select class="form-control" wire:model="estado">
+                                    <option value="pendiente">Pendiente</option>
+                                    <option value="procesada">Procesada</option>
+                                    <option value="anulada">Anulada</option>
+                                </select>
+                                @error('estado') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        
+                        {{-- PDF --}}
+                        <div 
+                            class="mt-4"
+                            x-data="pdfUploader"
+                            @reset-pdf.window="reset()"
+                            x-cloak
+                        >
+                            <label class="font-weight-bold mb-2">Archivo PDF</label>
+
+                            {{-- Zona de arrastrar / seleccionar --}}
+                            <div
+                                style="cursor: pointer";
+                                class="border rounded p-4 text-center bg-light "
+                                :class="{ 
+                                    'border-primary shadow': fileName !== '', 
+                                    'border-danger': isDragging 
+                                }"
+                                @click="openFileDialog()"
+                                @dragover.prevent="isDragging = true"
+                                @dragleave.prevent="isDragging = false"
+                                @drop.prevent="handleDrop($event)"
                             >
-                        </div>
+                                <i class="fas fa-file-pdf fa-3x text-danger mb-2"></i>
 
-                        {{-- Mostrar errores --}}
-                        @error('pdf_file')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-
-                        {{-- Vista previa PDF --}}
-                        @if ($pdf_preview_path)
-                            <iframe 
-                                src="{{ asset('storage/' . $pdf_preview_path) }}" 
-                                class="mt-3"
-                                style="width:100%; height:500px; border:1px solid #ccc;">
-                            </iframe>
-                        @endif
-                    </div>
-                </div>
-
-                {{-- ===================================== --}}
-                {{-- ACORDEÓN DE DETALLES DE FACTURA --}}
-                {{-- ===================================== --}}
-                <div class="mt-4" wire:ignore.self>
-
-                    <div class="accordion" id="accordionDetalle">
-
-                        <div class="card">
-                            <div class="card-header bg-info" id="headingDetalle">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link text-white" type="button"
-                                        data-toggle="collapse" data-target="#collapseDetalle" aria-expanded="true">
-                                        <i class="fas fa-box-open"></i> Detalles de Factura
-                                    </button>
-                                </h2>
-                            </div>
-
-                            <div id="collapseDetalle" class="collapse" aria-labelledby="headingDetalle" data-parent="#accordionDetalle">
-                                <div class="card-body">
-
-                                    {{-- Componente Livewire del detalle --}}
-                                    @livewire('factura-detalle.index', ['facturaId' => $factura_id ?? null], key($factura_id))
-
+                                <div class="mt-2">
+                                    <strong x-text="fileName || 'Haz clic o arrastra un PDF aquí'"></strong>
                                 </div>
+
+                                <input 
+                                    type="file" 
+                                    accept="application/pdf"
+                                    wire:model="pdf_file"
+                                    class="d-none"
+                                    x-ref="pdfInput"
+                                    @change="updateFileName($event)"
+                                >
+                            </div>
+
+                            {{-- Mostrar errores --}}
+                            @error('pdf_file')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+
+                            {{-- Vista previa PDF --}}
+                            @if ($pdf_preview_path)
+                                <iframe 
+                                    src="{{ asset('storage/' . $pdf_preview_path) }}" 
+                                    class="mt-3"
+                                    style="width:100%; height:500px; border:1px solid #ccc;">
+                                </iframe>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- ===================================== --}}
+                    {{--  DETALLES DE FACTURA --}}
+                    {{-- ===================================== --}}
+                    <div class="mt-4" wire:ignore.self>
+                        <div class="card mt-4 border-info">
+                            <div class="card-header bg-info text-white">
+                                <i class="fas fa-box-open"></i> Detalle de Factura
+                            </div>
+
+                            <div class="card-body">
+                                @livewire('factura-detalle.index', ['facturaId' => $factura_id ?? null], key($factura_id))
                             </div>
                         </div>
-
                     </div>
-                </div>
+                    {{-- FOOTER --}}
+                    <div class="modal-footer bg-light d-flex justify-content-between">
 
-                {{-- FOOTER --}}
-                <div class="modal-footer bg-light d-flex justify-content-between">
-
-                    {{-- BOTÓN AGREGAR DETALLE (IZQUIERDA) --}}
-                    <button 
-                        type="button" 
-                        class="btn btn-outline-info"
-                        wire:click="$emit('toggleDetalle')"
-                    >
-                        <i class="fas fa-plus"></i> Agregar Detalle
-                    </button>
-
-                    <div>
-                        {{-- BOTÓN CANCELAR --}}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            <i class="fas fa-times-circle mr-1"></i> Cancelar
-                        </button>
-
-                        {{-- BOTÓN CREAR / ACTUALIZAR --}}
-                        <button type="submit"
-                            class="btn {{ $modalMode === 'create' ? 'btn-primary' : 'btn-success' }}"
-                            wire:click="{{ $modalMode === 'create' ? 'save' : 'update' }}"
+                        {{-- BOTÓN AGREGAR DETALLE (IZQUIERDA) --}}
+                        <button 
+                            type="button" 
+                            class="btn btn-outline-info"
+                            wire:click="$emit('toggleDetalle')"
                         >
-                            <i class="fas {{ $modalMode === 'create' ? 'fa-plus-circle' : 'fa-save' }} mr-1"></i>
-                            {{ $modalMode === 'create' ? 'Crear Factura' : 'Actualizar Factura' }}
+                            <i class="fas fa-plus"></i> Agregar Detalle
                         </button>
+
+                        <div>
+                            {{-- BOTÓN CANCELAR --}}
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                <i class="fas fa-times-circle mr-1"></i> Cancelar
+                            </button>
+
+                            {{-- BOTÓN CREAR / ACTUALIZAR --}}
+                            <button type="submit"
+                                class="btn {{ $modalMode === 'create' ? 'btn-primary' : 'btn-success' }}"
+                                wire:click="{{ $modalMode === 'create' ? 'save' : 'update' }}"
+                            >
+                                <i class="fas {{ $modalMode === 'create' ? 'fa-plus-circle' : 'fa-save' }} mr-1"></i>
+                                {{ $modalMode === 'create' ? 'Crear Factura' : 'Actualizar Factura' }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     {{-- ========================================= --}}
     {{-- MODAL ELIMINACIÓN --}}
     {{-- ========================================= --}}

@@ -9,16 +9,29 @@ class Index extends Component
 {
 
     public $producto_id;
-    public $cantidad;
-    public $recibidos;
+    public $cantidad = 0;
+    public $recibidos = 0;
     public $faltantes = 0;
 
     public function updated($field)
     {
-        // Calcula faltantes automáticamente
-        if ($this->cantidad && $this->recibidos !== null) {
-            $this->faltantes = $this->cantidad - $this->recibidos;
+        if ($field === 'cantidad' || $field === 'recibidos') {
+            $this->calcularFaltantes();
         }
+    }
+
+    
+    public function calcularFaltantes()
+    {
+        $cant = (int)$this->cantidad;
+        $rec = (int)$this->recibidos;
+
+        if ($rec > $cant) {
+            $rec = $cant;
+            $this->recibidos = $cant;
+        }
+
+        $this->faltantes = $cant - $rec;
     }
 
     public function agregarDetalle()

@@ -22,7 +22,7 @@
 
         <div class="col-md-2">
             <label>Faltantes</label>
-            <input type="number" class="form-control" disabled value="{{ $faltantes }}">
+            <input type="number" class="form-control" wire:model="faltantes" disabled>
         </div>
 
         <div class="col-md-2">
