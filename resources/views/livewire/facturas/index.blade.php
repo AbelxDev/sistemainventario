@@ -164,8 +164,6 @@
     {{-- ========================================= --}}
     {{-- MODAL CREAR / EDITAR --}}
     {{-- ========================================= --}}
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-
         <div wire:ignore.self class="modal fade" id="modalFactura" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -182,7 +180,7 @@
                     </div>
 
                     {{-- BODY --}}
-                    <div class="modal-body">
+                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                         <div class="row">
                             {{-- Número --}}
                             <div class="col-md-6 mb-3">
@@ -277,41 +275,26 @@
                                 </iframe>
                             @endif
                         </div>
-                    </div>
+                        {{-- ===================================== --}}
+                        {{--  DETALLES DE FACTURA --}}
+                        {{-- ===================================== --}}
+                        <div class="mt-4" wire:ignore.self>
+                            <div class="card mt-4 border-info">
+                                <div class="card-header bg-info text-white">
+                                    <i class="fas fa-box-open"></i> Detalle de Factura
+                                </div>
 
-                    {{-- ===================================== --}}
-                    {{--  DETALLES DE FACTURA --}}
-                    {{-- ===================================== --}}
-                    <div class="mt-4" wire:ignore.self>
-                        <div class="card mt-4 border-info">
-                            <div class="card-header bg-info text-white">
-                                <i class="fas fa-box-open"></i> Detalle de Factura
-                            </div>
-
-                            <div class="card-body">
-                                @livewire('factura-detalle.index', ['facturaId' => $factura_id ?? null], key($factura_id))
+                                <div class="card-body">
+                                    @livewire('factura-detalle.index', ['facturaId' => $factura_id ?? null], key($factura_id))
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {{-- FOOTER --}}
-                    <div class="modal-footer bg-light d-flex justify-content-between">
-
-                        {{-- BOTÓN AGREGAR DETALLE (IZQUIERDA) --}}
-                        <button 
-                            type="button" 
-                            class="btn btn-outline-info"
-                            wire:click="$emit('toggleDetalle')"
-                        >
-                            <i class="fas fa-plus"></i> Agregar Detalle
-                        </button>
-
-                        <div>
-                            {{-- BOTÓN CANCELAR --}}
+                        {{-- FOOTER --}}
+                        <div class="modal-footer bg-light">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 <i class="fas fa-times-circle mr-1"></i> Cancelar
                             </button>
 
-                            {{-- BOTÓN CREAR / ACTUALIZAR --}}
                             <button type="submit"
                                 class="btn {{ $modalMode === 'create' ? 'btn-primary' : 'btn-success' }}"
                                 wire:click="{{ $modalMode === 'create' ? 'save' : 'update' }}"
@@ -324,7 +307,6 @@
                 </div>
             </div>
         </div>
-    </div>
     {{-- ========================================= --}}
     {{-- MODAL ELIMINACIÓN --}}
     {{-- ========================================= --}}
@@ -366,7 +348,6 @@
             </div>
         </div>
     </div>
-
 </div>
 {{-- ======================================================== --}}
 {{-- SCRIPTS LIMPIOS Y OPTIMIZADOS --}}
