@@ -137,15 +137,44 @@ class Index extends Component
         $this->dispatch('open-delete-modal');
     }
 
-    public function eliminar()
+   public function eliminar()
     {
-        Proveedor::destroy($this->idAEliminar);
-        $this->idAEliminar = null;
-        $this->nombreAEliminar = null; // limpiamos
-        $this->modalEliminarVisible = false;
-        $this->dispatch('close-delete-modal');
-        $this->dispatch('success', message: 'Proveedor eliminado correctamente.');
+        try {
+
+            Proveedor::destroy($this->idAEliminar);
+
+            $this->idAEliminar = null;
+            $this->nombreAEliminar = null;
+
+            $this->modalEliminarVisible = false;
+            $this->dispatch('close-delete-modal');
+            $this->dispatch('success', message: 'Proveedor eliminado correctamente.');
+
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            // Verificamos si es un error de llave foránea (SQLSTATE 23000)
+            if ($e->getCode() == "23000") {
+
+                $this->dispatch(
+                    'error',
+                    message: 'No puedes eliminar este proveedor porque ya tiene productos asignados.'
+                );
+
+            } else {
+
+                // Error genérico
+                $this->dispatch(
+                    'error',
+                    message: 'Ocurrió un error al intentar eliminar el proveedor.'
+                );
+            }
+
+            // Cerrar modal de eliminar
+            $this->modalEliminarVisible = false;
+            $this->dispatch('close-delete-modal');
+        }
     }
+
 
     public function cerrarModalEliminar()
     {

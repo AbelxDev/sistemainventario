@@ -15,6 +15,8 @@ class Index extends Component
 {
     use WithPagination;
 
+    protected string $paginationTheme = 'bootstrap';
+
     // ============ LISTADO ============
     public $search = '';
 
@@ -49,6 +51,33 @@ class Index extends Component
     }
 
     // ============ VALIDACIONES ============
+    protected $messages = [
+        'tipo_id.required' => 'El tipo de producto es obligatorio.',
+        'tipo_id.exists'   => 'El tipo seleccionado no es válido.',
+
+        'codigo.required'  => 'El código es obligatorio.',
+        'codigo.max'       => 'El código no puede exceder 50 caracteres.',
+        'codigo.unique'    => 'Este código ya está registrado.',
+
+        'nombre.required'  => 'El nombre del producto es obligatorio.',
+        'nombre.max'       => 'El nombre no puede exceder 255 caracteres.',
+
+        'proveedor_principal_id.required' => 'El proveedor principal es obligatorio.',
+        'proveedor_principal_id.exists'   => 'El proveedor principal no es válido.',
+
+        'proveedores_secundarios.array'   => 'El formato de proveedores secundarios no es válido.',
+        'proveedores_secundarios.*.exists' => 'Uno de los proveedores secundarios no es válido.',
+
+        'ambiente_id.exists' => 'El ambiente seleccionado no es válido.',
+
+        'cantidad_inicial.integer' => 'La cantidad inicial debe ser un número.',
+        'cantidad_inicial.min'     => 'La cantidad inicial no puede ser negativa.',
+        'cantidad_inicial.required' => 'La cantidad inicial es obligatoria.',
+        'cantidad_inicial.integer'  => 'La cantidad inicial debe ser un número entero.',
+        'cantidad_inicial.min'      => 'La cantidad inicial no puede ser negativa.',
+
+    ];
+
     protected function rules()
     {
         return [
@@ -106,6 +135,8 @@ class Index extends Component
     {
         $this->modalMode = 'create';
         $this->resetForm();
+
+        $this->resetErrorBag();
         $this->dispatch('open-producto-modal');
     }
 
@@ -139,7 +170,7 @@ class Index extends Component
             }
         });
 
-        session()->flash('success', 'Producto creado correctamente.');
+        $this->dispatch('success', message: 'Producto creado correctamente!');
 
         $this->dispatch('close-producto-modal');
 
@@ -174,7 +205,8 @@ class Index extends Component
             $this->ambiente_id = null;
             $this->cantidad_inicial = 0;
         }
-
+         
+        $this->resetErrorBag();
         $this->dispatch('open-producto-modal');
     }
 
@@ -206,7 +238,8 @@ class Index extends Component
             ]);
         }
 
-        session()->flash('success', 'Producto actualizado.');
+        $this->dispatch('success', message: 'Producto actualizado correctamente!');
+
         $this->dispatch('close-producto-modal');
         $this->resetForm();
     }
@@ -251,7 +284,8 @@ class Index extends Component
         // ---- Si no tiene ninguna relación ----
         $p->delete();
 
-        session()->flash('success', 'Producto eliminado correctamente.');
+        $this->dispatch('cerrarModalEliminar');
+        $this->dispatch('success', message: 'Producto eliminado correctamente!');
     }
 
     // ============ RESET ============
@@ -281,9 +315,40 @@ class Index extends Component
                     ->orWhere('codigo', 'like', "%{$this->search}%");
             })
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(2);
 
 
         return view('livewire.productos.index', compact('productos'));
     }
+    
+    public function openDeleteModal($id)
+    {
+        $this->deleteId = $id;
+        $this->dispatch('abrirModalEliminar');
+    }
+
+    public $deleteId;
+
+     public function confirmDelete()
+    {
+        $producto = Producto::find($this->deleteId);
+
+        if (!$producto) {
+            $this->dispatch('error', message: 'Producto no encontrado.');
+            return;
+        }
+
+        try {
+            $producto->delete();
+
+            $this->dispatch('success', message: 'Producto eliminado correctamente.' );
+            $this->dispatch('cerrarModalEliminar');
+
+        } catch (\Exception $e) {
+
+            $this->dispatch('error', message: 'Error al eliminar el producto.');
+        }
+    }
+
+    
 }

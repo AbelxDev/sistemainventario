@@ -56,6 +56,8 @@ class Index extends Component
     {
         $this->resetFields();
         $this->modalMode = 'create';
+
+        $this->resetErrorBag();
         $this->dispatch('open-modal');
     }
 
@@ -71,6 +73,7 @@ class Index extends Component
         $this->canEditPrefijo = $tipo->productos()->count() === 0;
         $this->modalMode = 'edit';
 
+        $this->resetErrorBag();
         $this->dispatch('open-modal');
     }
 

@@ -6,7 +6,7 @@
         <div class="row mb-3">
             {{-- BUSCADOR --}}
             <div class="col-md-9">
-                <x-adminlte-input name="search" wire:model.live="search" placeholder="Buscar..." label="Buscar tipo de producto:" igroup-size="sm">
+                <x-adminlte-input name="search" wire:model.live="search" placeholder="Buscar por nombre o prefijo" label="Buscar tipo de producto:" igroup-size="sm">
                     <x-slot name="appendSlot">
                         <x-adminlte-button theme="dark" icon="fas fa-search" />
                     </x-slot>
@@ -52,7 +52,7 @@
                                     <div x-show="tooltip"
                                         x-transition
                                         class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
-                                        style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                        style="bottom: 120%; right: 50%; white-space: nowrap; z-index: 2000;">
                                         Editar producto
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
                                     <div x-show="tooltip"
                                         x-transition
                                         class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
-                                        style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                        style="bottom: 120%; right: 50%; white-space: nowrap; z-index: 2000;">
                                         Eliminar producto
                                     </div>
                                 </div>
@@ -177,8 +177,10 @@
                 </div>
 
                 <div class="modal-body text-center">
-                    <i class="fas fa-user-times fa-3x text-danger mb-3"></i>
                     
+                    <i class="fas fa-tags fa-3x text-danger mb-3 me-2"></i>
+                    <i class="fas fa-times fa-3x text-danger mb-3"></i>
+
                     <h5 class="font-weight-bold">
                         ¿Seguro que deseas eliminar este tipo de producto?</h5>
 

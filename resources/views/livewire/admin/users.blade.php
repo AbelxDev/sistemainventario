@@ -69,7 +69,7 @@
                                         <div x-show="tooltip"
                                             x-transition
                                             class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
-                                            style="bottom: 120%; left: 50%; transform: translateX(-50%); white-space: nowrap; z-index: 9999;">
+                                            style="bottom: 120%; right: 50%; white-space: nowrap; z-index: 2000;">
                                             Editar usuario
                                         </div>
                                 </div>
@@ -85,7 +85,7 @@
                                         <div x-show="tooltip"
                                             x-transition
                                             class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
-                                            style="bottom: 120%; left: 50%; transform: translateX(-50%); white-space: nowrap; z-index: 9999;">
+                                            style="bottom: 120%; right 50%; white-space: nowrap; z-index: 2000;">
                                             Eliminar usuario
                                         </div>
                                 </div>

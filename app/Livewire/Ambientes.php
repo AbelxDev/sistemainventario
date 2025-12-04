@@ -45,6 +45,7 @@ class Ambientes extends Component
         $this->reset(['ambiente_id', 'nombre', 'ubicacion']);
         $this->modo = 'crear';
 
+        $this->resetErrorBag();
         $this->dispatch('abrirModalForm');
     }
 
@@ -58,6 +59,7 @@ class Ambientes extends Component
 
         $this->modo = 'editar';
 
+        $this->resetErrorBag();
         $this->dispatch('abrirModalForm');
         
     }

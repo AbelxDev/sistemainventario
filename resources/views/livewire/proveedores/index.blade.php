@@ -1,182 +1,191 @@
-<div>
-    <x-adminlte-card title="Proveedores" theme="info" icon="fas fa-truck">
-        <div class="row mb-3">
+<div class="mt-3">
 
+    <x-adminlte-card title="Proveedores" theme="info" icon="fas fa-truck">
+
+        {{-- BUSCADOR + BOTÓN NUEVO --}}
+        <div class="row mb-3">
             <div class="col-md-9">
                 <x-adminlte-input name="search" wire:model.live="search"
-                    label="Buscar proveedor:"
                     placeholder="Buscar por Razón Social, RUC, Teléfono o Dirección"
-                    igroup-size="sm">
+                    label="Buscar proveedor:" igroup-size="sm">
                     <x-slot name="appendSlot">
                         <x-adminlte-button theme="dark" icon="fas fa-search" />
                     </x-slot>
                 </x-adminlte-input>
             </div>
+
             <div class="col-md-3 d-flex align-items-end justify-content-end">
-                <x-adminlte-button theme="primary" icon="fa fa-plus" label="Nuevo Proveedor"
-                    wire:click="crear" />
+                <x-adminlte-button label="Nuevo Proveedor" theme="primary" icon="fas fa-plus"
+                    wire:click="crear"/>
             </div>
         </div>
+
+        {{-- TABLA --}}
         <div class="table-responsive">
-            <table class="table table-striped" style="min-width: 900px">
-                <thead>
-                <tr>
-                    <th>N°</th>
-                    <th> <i class="fas fa-building"></i> Razón Social</th>
-                    <th><i class="fas fa-id-card"></i> RUC</th>
-                    <th><i class="fas fa-phone"></i> Teléfono</th>
-                    <th><i class="fas fa-map-marker-alt"></i> Dirección</th>
-                    <th><i class="fas fa-cogs"></i> Acciones</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                @foreach($proveedores as $index => $item)
+            <table class="table table-hover table-striped align-middle" style="min-width: 900px">
+                <thead class="bg-light">
                     <tr>
-                        <td>{{ $proveedores->firstItem() + $index }}</td>
-                        <td>{{ $item->razon_social }}</td>
-                        <td>{{ $item->ruc }}</td>
-                        <td>{{ $item->telefono }}</td>
-                        <td>{{ $item->direccion }}</td>
-                        
-                        <!--mensajes con alphine-->
-                         <td class="text-center">
-                                <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
-                                        <x-adminlte-button theme="warning" icon="fas fa-edit" class="btn-sm"
-                                            wire:click="editar({{ $item->id }})"
-                                            @mouseenter="tooltip = true"
-                                            @mouseleave="tooltip = false" />
+                        <th>N°</th>
+                        <th><i class="fas fa-building"></i> Razón Social</th>
+                        <th><i class="fas fa-id-card"></i> RUC</th>
+                        <th><i class="fas fa-phone"></i> Teléfono</th>
+                        <th><i class="fas fa-map-marker-alt"></i> Dirección</th>
+                        <th class="text-center"><i class="fas fa-cogs"></i> Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($proveedores as $index => $item)
+                        <tr>
+                            <td>{{ $proveedores->firstItem() + $index }}</td>
+                            <td>{{ $item->razon_social }}</td>
+                            <td>{{ $item->ruc }}</td>
+                            <td>{{ $item->telefono }}</td>
+                            <td>{{ $item->direccion }}</td>
 
-                                        <!-- TOOLTIP ALPINE -->
-                                        <div x-show="tooltip"
-                                            x-transition
-                                            class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
-                                            style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
-                                            Editar proveedor
-                                        </div>
+                            {{-- BOTONES --}}
+                            <td class="text-center">
+                                {{-- EDITAR --}}
+                                <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
+                                    <x-adminlte-button theme="warning" icon="fas fa-edit" class="btn-sm"
+                                        wire:click="editar({{ $item->id }})"
+                                        @mouseenter="tooltip = true"
+                                        @mouseleave="tooltip = false" />
+                                    <div x-show="tooltip" x-transition
+                                        class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                        style="bottom: 120%; right: 50%; white-space: nowrap; z-index: 2000;">
+                                        Editar proveedor
+                                    </div>
                                 </div>
 
-                                    <!-- BOTÓN ELIMINAR -->
+                                {{-- ELIMINAR --}}
                                 <div x-data="{ tooltip: false }" class="d-inline-block position-relative mx-1">
-                                        <x-adminlte-button theme="danger" icon="fas fa-trash" class="btn-sm"
-                                            wire:click="confirmarEliminacion({{ $item->id }})"
-                                            @mouseenter="tooltip = true"
-                                            @mouseleave="tooltip = false" />
-
-                                        <!-- TOOLTIP ALPINE -->
-                                        <div x-show="tooltip"
-                                            x-transition
-                                            class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
-                                            style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
-                                            Eliminar proveedor
-                                        </div>
+                                    <x-adminlte-button theme="danger" icon="fas fa-trash" class="btn-sm"
+                                        wire:click="confirmarEliminacion({{ $item->id }})"
+                                        @mouseenter="tooltip = true"
+                                        @mouseleave="tooltip = false" />
+                                    <div x-show="tooltip" x-transition
+                                        class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
+                                        style="bottom: 120%; right: 50%; white-space: nowrap; z-index: 2000;">
+                                        Eliminar proveedor
+                                    </div>
                                 </div>
                             </td>
-
-                    </tr>
-                @endforeach
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-3">
+                                <i class="fas fa-info-circle"></i> No hay resultados
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
-        </div>
 
-        <div class="d-flex justify-content-center mt-3">
-            {{ $proveedores->links() }}
+            {{-- PAGINACIÓN --}}
+            <div class="mt-3">
+                {{ $proveedores->links() }}
+            </div>
         </div>
 
     </x-adminlte-card>
-    
+
+    {{-- MODAL CREAR / EDITAR --}}
     @include('livewire.proveedores.modal')
-    @include('livewire.proveedores.modal-eliminar')
+
+    {{-- MODAL ELIMINAR --}}
+    <div class="modal fade" id="modalDelete" tabindex="-1" data-bs-backdrop="static"
+        aria-labelledby="modalDeleteLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-md">
+            <div class="modal-content shadow-lg border-0">
+
+                <!-- HEADER -->
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title d-flex align-items-center" id="modalDeleteLabel">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Eliminar Proveedor
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body text-center">
+                    <i class="fas fa-truck fa-3x text-danger mb-3 me-2"></i>
+                    <i class="fas fa-times fa-3x text-danger mb-3"></i>
+
+                    <h5 class="font-weight-bold">
+                        ¿Seguro que deseas eliminar el proveedor?
+                    </h5>
+                    <p class="text-muted">
+                        Esta acción es permanente y no se puede deshacer.
+                    </p>
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" wire:click="cerrarModalEliminar"
+                        data-dismiss="modal">
+                        <i class="fas fa-times-circle mr-1"></i>
+                        Cancelar
+                    </button>
+
+                    <button type="button" class="btn btn-danger" wire:click="eliminar">
+                        <i class="fas fa-trash-alt mr-1"></i>
+                        Eliminar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </div>
 
+{{-- SCRIPTS MODALES Y ALERTAS --}}
 @push('js')
 <script>
-    // --- ALERTA SWEETALERT2 ---
-    document.addEventListener('success', (event) => {
+document.addEventListener('livewire:init', () => {
+
+    Livewire.on('open-modal', () => $('#modalForm').modal('show'));
+    Livewire.on('close-modal', () => $('#modalForm').modal('hide'));
+
+    Livewire.on('open-delete-modal', () => $('#modalDelete').modal('show'));
+    Livewire.on('close-delete-modal', () => $('#modalDelete').modal('hide'));
+
+    window.addEventListener('success', event => {
         Swal.fire({
+            position: "center",
             icon: "success",
             title: event.detail.message,
+            width: "30rem",
             showConfirmButton: false,
-            timer: 1500,
-            position: "center"
+            timer: 1500
         });
     });
+
+    window.addEventListener('edited', event => {
+        Swal.fire({
+            position: "center",
+            icon: "info",
+            title: event.detail.message,
+            width: "30rem",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    });
+    window.addEventListener('error', event => {
+        Swal.fire({
+            icon: "error",
+            title: event.detail.message,
+            position: "center",
+            width: "30rem",
+            showConfirmButton: false,
+            timer: 4000
+        });
+    });
+
+
+});
 </script>
 @endpush
-@push('css')
-<style>
-    @media (min-width: 992px) { /* pantallas grandes */
-        .custom-modal {
-            margin-top: -120px !important;
-        }
-    }
-
-        @media (max-width: 991px) { /* tablets y móviles */
-            .custom-modal {
-                margin-top: 0 !important;
-        }
-    }
-
-    /* Tamaño normal (desktop) */
-    thead th {
-        font-size: 16px;
-    }
-    thead th i {
-        font-size: 16px;
-        margin-right: 4px;
-    }
-
-    /* Tablets (pantallas medianas) */
-    @media (max-width: 991px) {
-        thead th {
-            font-size: 14px;
-        }
-        thead th i {
-            font-size: 14px;
-        }
-    }
-
-    /* Celulares (pantallas pequeñas) */
-    @media (max-width: 768px) {
-        thead th {
-            font-size: 12px;
-        }
-        thead th i {
-            font-size: 12px;
-        }
-    }
-
-    /* Celulares muy pequeños */
-    @media (max-width: 576px) {
-        thead th {
-            font-size: 11px;
-        }
-        thead th i {
-            font-size: 11px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        table td, table th {
-            padding: 6px 8px !important;
-        }
-    }
-
-    /* Fix para SweetAlert centrado en AdminLTE */
-    .swal2-container {
-        top: 0 !important;
-        left: 0 !important;
-        bottom: 0 !important;
-        right: 0 !important;
-        transform: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .swal2-popup {
-        margin: auto !important;
-    }
-
-</style>
-@endpush('css')
-

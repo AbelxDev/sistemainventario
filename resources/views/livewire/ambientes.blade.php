@@ -1,6 +1,6 @@
 <div class="mt-3">
 
-    <x-adminlte-card title="Gestión de Usuarios" theme="info" icon="fas fa-users">
+    <x-adminlte-card title="Gestión de Ambientes" theme="info" icon="fas fa-leaf">
 
         {{-- ============================= --}}
         {{-- BUSCADOR + BOTÓN CREAR --}}
@@ -9,7 +9,7 @@
 
             {{-- BUSCADOR --}}
             <div class="col-md-9">
-                <x-adminlte-input name="search" wire:model.live="search" placeholder="Buscar..." label="Buscar ambiente:" igroup-size="sm">
+                <x-adminlte-input name="search" wire:model.live="search" placeholder="Buscar por nombre o ubicacion" label="Buscar ambiente:" igroup-size="sm">
                     <x-slot name="appendSlot">
                         <x-adminlte-button theme="dark" icon="fas fa-search" />
                     </x-slot>
@@ -58,7 +58,7 @@
                                         <div x-show="tooltip"
                                             x-transition
                                             class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
-                                            style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                            style="bottom: 120%; right: 50%; white-space: nowrap; z-index: 2000;">
                                             Editar ambiente
                                         </div>
                                 </div>
@@ -74,7 +74,7 @@
                                         <div x-show="tooltip"
                                             x-transition
                                             class="position-absolute bg-dark text-white px-2 py-1 rounded shadow"
-                                            style="bottom: 120%; left: 50%; transform: translateX(-80%); white-space: nowrap; z-index: 9999;">
+                                            style="bottom: 120%; right: 50%; white-space: nowrap; z-index: 2000;">
                                             Eliminar ambiente
                                         </div>
                                 </div>
@@ -213,7 +213,8 @@
                 <!-- BODY -->
                 <div class="modal-body text-center">
 
-                    <i class="fas fa-user-times fa-3x text-danger mb-3"></i>
+                    <i class="fas fa-leaf fa-3x text-danger mb-3"></i>
+                    <i class="fas fa-times fa-3x text-danger mb-3"></i>
 
                     <h5 class="font-weight-bold">
                         ¿Seguro que deseas eliminar este ambiente?
